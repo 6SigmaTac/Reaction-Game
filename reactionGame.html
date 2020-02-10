@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <title>Reaction Game!</title>
+</head>
+<body>
+    <script>
+        const GameState = {
+            BEGINNING: 1,
+            STANDING_BY: 2,
+            CHALLENGE: 3,
+            RESULTS: 4
+        };
+
+
+        var state = GameState.BEGINNING;
+        var reactionTime = 0;
+
+        function clock(){
+            reactionTime = reactionTime+1;
+        }
+
+        function challengeButton() {
+            var buttonStage2 = document.getElementById("clickable");
+            buttonStage2.innerHTML = "GO!";
+            state = GameState.CHALLENGE;
+            setInterval(clock,1);
+        }
+
+        function activate(button) {
+                    button.innerHTML = "Standby...";
+                    state = GameState.STANDING_BY;
+                    var randomTime = Math.floor(Math.random() * 4) + 3;
+                    setTimeout(challengeButton, randomTime * 1000);
+
+        }
+
+        function standbyButton() {
+            var button = document.getElementById("clickable");
+            console.log(button);
+            switch (state) {
+                case GameState.BEGINNING:
+                    activate(button);
+                    break;
+                case GameState.CHALLENGE:
+                    button.innerHTML = reactionTime + " miliseconds";
+                    state = GameState.RESULTS;
+                    break;
+            }
+        }
+    </script>
+
+    <div class="jumbotron text-center">
+        <h2>Let's play!</h2>
+        <p>Click the button to activate the game and as sooon as you see "GO!" hit the button again and check how fast are you</p>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+
+            </div>
+            <div class="col-sm-4">
+                <button onclick="standbyButton()" type="button" class="btn btn-primary btn-lg btn-block" id="clickable">Are you ready?</button>
+            </div>
+            <div class="col-sm-4">
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
