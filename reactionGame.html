@@ -17,6 +17,7 @@
 
         var state = GameState.BEGINNING;
         var reactionTime = 0;
+        var roundCounter = 1;
 
         function clock(){
             reactionTime = reactionTime+1;
@@ -26,7 +27,7 @@
             var buttonStage2 = document.getElementById("clickable");
             buttonStage2.innerHTML = "GO!";
             state = GameState.CHALLENGE;
-            setInterval(clock,1);
+            timer = setInterval(clock,1);
         }
 
         function activate(button) {
@@ -39,6 +40,7 @@
 
         function standbyButton() {
             var button = document.getElementById("clickable");
+            var resetButton = document.getElementById("resetClickable");
             console.log(button);
             switch (state) {
                 case GameState.BEGINNING:
@@ -46,9 +48,33 @@
                     break;
                 case GameState.CHALLENGE:
                     button.innerHTML = reactionTime + " miliseconds";
+                    clearInterval(timer);
+                    state = GameState.RESULTS;
+                    resetButton.classList.remove('invisible');
+                    break;
+                case GameState.STANDING_BY:
+                    button.innerHTML = "Too early!";
                     state = GameState.RESULTS;
                     break;
             }
+        }
+
+        function resetting() {
+            state = GameState.BEGINNING;
+            document.getElementById("clickable").innerHTML = "Are you ready?";
+            document.getElementById("resetClickable").classList.add('invisible');
+            updateScoreSheet();
+        }
+
+        function updateScoreSheet(){
+            document.getElementById("scoresHeader").classList.remove('invisible');
+            var para = document.createElement("p");
+            var node = document.createTextNode("Round " + roundCounter + ": " + reactionTime + " miliseconds");
+            reactionTime = 0;
+            roundCounter +=1;
+            para.appendChild(node);
+            var element = document.getElementById("scoreDiv");
+            element.appendChild(para);
         }
     </script>
 
@@ -64,9 +90,13 @@
             </div>
             <div class="col-sm-4">
                 <button onclick="standbyButton()" type="button" class="btn btn-primary btn-lg btn-block" id="clickable">Are you ready?</button>
+                </n>
+                <button onclick="resetting()" type="button" class="btn btn-secondary btn-lg btn-block invisible" id="resetClickable">Reset</button>
             </div>
-            <div class="col-sm-4">
-
+            <div class="col-sm-4" id="scoreDiv">
+                <div class="invisible" id="scoresHeader">
+                    <h3>Scores from previous rounds:</h3>
+                </div>
             </div>
         </div>
     </div>
